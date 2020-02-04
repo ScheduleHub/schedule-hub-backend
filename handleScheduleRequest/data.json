@@ -37,7 +37,9 @@
                 "building": "MC",
                 "room": "4021"
               },
-              "instructors": ["Lushman,Brad"]
+              "instructors": [
+                "Lushman,Brad"
+              ]
             }
           ],
           "held_with": [],
@@ -79,7 +81,9 @@
                 "building": "MC",
                 "room": "4058"
               },
-              "instructors": ["Hackman,Rob"]
+              "instructors": [
+                "Hackman,Rob"
+              ]
             }
           ],
           "held_with": [],
@@ -205,7 +209,9 @@
                 "building": null,
                 "room": null
               },
-              "instructors": ["Anderson,Karen"]
+              "instructors": [
+                "Anderson,Karen"
+              ]
             }
           ],
           "held_with": [],
@@ -249,7 +255,9 @@
                 "building": "DC",
                 "room": "1350"
               },
-              "instructors": ["Idziak,Stefan"]
+              "instructors": [
+                "Idziak,Stefan"
+              ]
             }
           ],
           "held_with": [],
@@ -291,7 +299,9 @@
                 "building": "STC",
                 "room": "1012"
               },
-              "instructors": ["Idziak,Stefan"]
+              "instructors": [
+                "Idziak,Stefan"
+              ]
             }
           ],
           "held_with": [],
@@ -333,7 +343,9 @@
                 "building": "DC",
                 "room": "1351"
               },
-              "instructors": ["Cummings,Karen"]
+              "instructors": [
+                "Cummings,Karen"
+              ]
             }
           ],
           "held_with": [],
@@ -638,8 +650,37 @@
       ]
     ],
     "filtered_courses": [
-      [[[8660], [8661], [6098]]],
-      [[[6701], [6702, 6703, 6704, 6705, 6706, 6853], [8504]]]
+      [
+        [
+          [
+            8660
+          ],
+          [
+            8661
+          ],
+          [
+            6098
+          ]
+        ]
+      ],
+      [
+        [
+          [
+            6701
+          ],
+          [
+            6702,
+            6703,
+            6704,
+            6705,
+            6706,
+            6853
+          ],
+          [
+            8504
+          ]
+        ]
+      ]
     ]
   }
 }
