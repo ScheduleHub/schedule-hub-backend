@@ -50,17 +50,27 @@ exports.handler = async event => {
   try {
     const data = await docClient.put(params).promise();
     console.log("Added item:", JSON.stringify(data, null, 2));
+    return {
+      statusCode: 200,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify("Success!")
+    };
   } catch (err) {
     console.log(
       "Unable to add item. Error JSON:",
       JSON.stringify(err, null, 2)
     );
+    return {
+      statusCode: 500,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: JSON.stringify(
+        "Unable to add item. Error JSON:",
+        JSON.stringify(err, null, 2)
+      )
+    };
   }
-  return {
-    statusCode: 200,
-    headers: {
-      "Access-Control-Allow-Origin": "*"
-    },
-    body: JSON.stringify("Success!")
-  };
 };

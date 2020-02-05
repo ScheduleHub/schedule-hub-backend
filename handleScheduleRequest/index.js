@@ -1,6 +1,6 @@
 "use strict";
-const event = require("./data");
-const emptyEvent = require("./emptyData");
+const event = require("../testData/data");
+const emptyEvent = require("../testData/emptyData");
 
 const handler = event => {
   // TODO implement
@@ -101,28 +101,40 @@ const handler = event => {
         }
       }
       //result = (list of all courses (list of all combination of compeleteCourseSelectionList))
-      let result = filtered_courses.map(x => x.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), [])));
+      let result = filtered_courses.map(x =>
+        x.reduce((a, b) =>
+          a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), [])
+        )
+      );
       for (var x in result) {
         for (var y in x) {
-
         }
       }
-      let permutation = result.reduce((a, b) => a.reduce((r, v) => r.concat(b.map(w => [].concat([v], [w]))), []));
-      let all_possible_schedules
+      let permutation = result.reduce((a, b) =>
+        a.reduce((r, v) => r.concat(b.map(w => [].concat([v], [w]))), [])
+      );
+      let all_possible_schedules;
       for (var schedule in permutation) {
         let isValid1 = true;
-        let timeArray = [new Array(143).fill(0), new Array(143).fill(0), new Array(143).fill(0), new Array(143).fill(0), new Array(143).fill(0)];
+        let timeArray = [
+          new Array(143).fill(0),
+          new Array(143).fill(0),
+          new Array(143).fill(0),
+          new Array(143).fill(0),
+          new Array(143).fill(0)
+        ];
         for (var course in schedule) {
           for (var section in course) {
             const sectionTimeObj = courseCodeToTime.get(section);
-            if (sectionTimeObj === undefined) { // cannot find section number in map
+            if (sectionTimeObj === undefined) {
+              // cannot find section number in map
               response = {
                 statusCode: 500,
                 headers: {
                   "Access-Control-Allow-Origin": "*"
                 },
-                body: JSON.stringify('Course code is not found!')
-              }
+                body: JSON.stringify("Course code is not found!")
+              };
               return response;
             }
             const every_week = sectionTimeObj.every_week;
@@ -145,25 +157,28 @@ const handler = event => {
               if (one_day.length > 0) {
                 for (var one_day_obj in one_day) {
                   if (one_day_map.has(one_day_obj.date)) {
-                    isValid2 = validate(one_day_map.get(one_day_obj.date), one_day_obj.time);
+                    isValid2 = validate(
+                      one_day_map.get(one_day_obj.date),
+                      one_day_obj.time
+                    );
                     if (!isValid2) break;
                   } else {
                     one_day_map.set(one_day_obj.date, new Array(143).fill(0));
                   }
                   switch (one_day_obj.weekday) {
-                    case 'M':
+                    case "M":
                       isValid3 = validate(timeArray[0], one_day_obj.time);
                       break;
-                    case 'T':
+                    case "T":
                       isValid3 = validate(timeArray[1], one_day_obj.time);
                       break;
-                    case 'W':
+                    case "W":
                       isValid3 = validate(timeArray[2], one_day_obj.time);
                       break;
-                    case 'Th':
+                    case "Th":
                       isValid3 = validate(timeArray[3], one_day_obj.time);
                       break;
-                    case 'F':
+                    case "F":
                       isValid3 = validate(timeArray[4], one_day_obj.time);
                       break;
                     default:
