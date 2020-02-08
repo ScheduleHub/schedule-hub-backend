@@ -1,0 +1,24 @@
+{
+  "name": "schedule-planner-backend",
+  "version": "1.0.0",
+  "description": "local backend dev and testing for schedule planner",
+  "dependencies": {
+    "aws-sdk": "^2.614.0",
+    "nodemon": "^2.0.2"
+  },
+  "devDependencies": {
+    "@babel/core": "^7.8.4",
+    "@babel/node": "^7.8.4",
+    "@babel/preset-env": "^7.8.4"
+  },
+  "scripts": {
+    "start": "nodemon --exec babel-node",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Yuhao-C/schedule-planner-backend.git"
+  },
+  "author": "Yuhao Chen",
+  "license": "MIT"
+}
