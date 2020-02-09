@@ -1,16 +1,9 @@
 import scheduleInputHandler from "../index";
-import empty from "./cases/empty";
-import missingId from "./cases/missingId";
-import missingSections from "./cases/missingSections";
-import normal from "./cases/normal";
-
-const handleScheduleInputTests = { empty, missingId, missingSections, normal };
+import testObj from "./testCases";
 
 (async () => {
-  for (const test in handleScheduleInputTests) {
-    const response = await scheduleInputHandler.handler(
-      handleScheduleInputTests[test]
-    );
+  for (const test in testObj) {
+    const response = await scheduleInputHandler.handler(testObj[test]);
     console.log(`
 -------------------------------------------
 Test result of "${test}":

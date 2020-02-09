@@ -1,212 +1,226 @@
 "use strict";
-const event = require("../testData/data");
-const emptyEvent = require("../testData/emptyData");
 
-const handler = event => {
-  // TODO implement
+exports.handler = async event => {
+  const timeToIdx = (h, m) => h * 6 + m / 10;
+  const prepend = (i, lol) => lol.map(lst => [i].concat(lst));
 
-  const timeToIdx = (h, m) => {
-    h * 6 + m / 10;
-  };
+  const perm = lol =>
+    !lol.length ? [[]] : lol[0].map(x => prepend(x, perm(lol.slice(1)))).flat();
 
-  const validate = (oneDayTimeArray, timeList) => {
-    let isValid1 = true;
-    const startIdx = timeToIdx(timeList[0], timeList[1]);
-    const endIdx = timeToIdx(timeList[2], timeList[3]);
-    for (let i = startIdx; i < endIdx; i++) {
-      if (oneDayTimeArray[i] === 1) {
-        isValid1 = false;
-        break;
-      } else {
-        oneDayTimeArray[i] = 1;
+  const checkEveryWeekConflict = (every_week, scheduleObj, mutate) => {
+    for (let i = 0; i < 5; i++) {
+      if (every_week[i].length === 0) continue;
+      for (let oneClassTime of every_week[i]) {
+        let [startHr, startMin, endHr, endMin] = oneClassTime;
+        let startIdx = timeToIdx(startHr, startMin);
+        let endIdx = timeToIdx(endHr, endMin);
+        for (let j = startIdx; j < endIdx; j++) {
+          if (scheduleObj.every_week[i][j] === 1) {
+            return true;
+          }
+          if (mutate) scheduleObj.every_week[i][j] = 1;
+        }
       }
     }
-    return isValid1;
+    return false;
   };
 
-  let response = null;
+  const checkOneDayConflict = (one_day, scheduleObj) => {
+    for (let oneDayObj of one_day) {
+      let { time, weekdays, date } = oneDayObj;
+      let [startHr, startMin, endHr, endMin] = time;
+      if (weekdays.includes("M")) {
+        if (
+          checkEveryWeekConflict([[time], [], [], [], []], scheduleObj, false)
+        )
+          return true;
+      } else if (weekdays.includes("Th")) {
+        if (
+          checkEveryWeekConflict([[], [], [], [time], []], scheduleObj, false)
+        )
+          return true;
+        weekdays = weekdays.replace("Th", "");
+      } else if (weekdays.includes("T")) {
+        if (
+          checkEveryWeekConflict([[], [time], [], [], []], scheduleObj, false)
+        )
+          return true;
+      } else if (weekdays.includes("W")) {
+        if (
+          checkEveryWeekConflict([[], [], [time], [], []], scheduleObj, false)
+        )
+          return true;
+      } else if (weekdays.includes("F")) {
+        if (
+          checkEveryWeekConflict([[], [], [], [], [time]], scheduleObj, false)
+        )
+          return true;
+      }
+      // check conflict with one_day
+      let startIdx = timeToIdx(startHr, startMin);
+      let endIdx = timeToIdx(endHr, endMin);
+      if (scheduleObj[date] === undefined) {
+        scheduleObj[date] = new Array(144).fill(0);
+        for (let i = startIdx; i < endIdx; i++) {
+          scheduleObj[date][i] = 1;
+        }
+      } else {
+        for (let i = startIdx; i < endIdx; i++) {
+          if (scheduleObj[date][i] === 1) {
+            return true;
+          }
+          scheduleObj[date][i] = 1;
+        }
+      }
+    }
+    return false;
+  };
 
   let validSchedules = [];
 
-  if (!!event && event.body) {
-    let body = event.body;
-    if (!body.courses_info || !body.filtered_courses) {
-      response = {
-        statusCode: 400,
-        headers: {
-          "Access-Control-Allow-Origin": "*"
-        },
-        body: JSON.stringify("Please add at least one course.")
-      };
-      console.log(response);
-    } else {
-      let courses_info = body.courses_info;
-      let filtered_courses = body.filtered_courses;
-      const courseCodeToTime = new Map(); // time: [[startHH,startMM,endHH,endMM], [...], ...]
-      for (var i = 0; i < courses_info.length; i++) {
-        var course = courses_info[i];
-        for (var j = 0; j < course.length; j++) {
-          var section = course[j];
-          if (section.campus === "ONLN ONLINE") continue;
-          let flag = true; // not closed
-          let timeObj = {
-            every_week: [null, null, null, null, null],
-            one_day: []
-          };
-          for (var k = 0; k < section.classes.length; k++) {
-            var oneClass = section.classes[k];
-            if (oneClass.date.is_closed) {
-              console.log("class closed");
-              flag = false; // one class is closed
-              break;
-            } else {
-              let [startHr, startMin] = oneClass.date.start_time.split(":");
-              let [endHr, endMin] = oneClass.date.end_time.split(":");
-              startHr = parseInt(startHr);
-              startMin = parseInt(startMin);
-              endHr = parseInt(endHr);
-              endMin = parseInt(endMin);
-              let weekdays = oneClass.date.weekdays;
-              if (oneClass.date.start_date === null) {
-                // every week case
-                if (weekdays.includes("M")) {
-                  timeObj.every_week[0] = [startHr, startMin, endHr, endMin];
-                } else if (weekdays.includes("Th")) {
-                  timeObj.every_week[3] = [startHr, startMin, endHr, endMin];
-                  weekdays = weekdays.replace("Th", "");
-                } else if (weekdays.includes("T")) {
-                  timeObj.every_week[1] = [startHr, startMin, endHr, endMin];
-                } else if (weekdays.includes("W")) {
-                  timeObj.every_week[2] = [startHr, startMin, endHr, endMin];
-                } else if (weekdays.includes("F")) {
-                  timeObj.every_week[4] = [startHr, startMin, endHr, endMin];
-                }
-              } else {
-                // one day case
-                timeObj.one_day = [
-                  ...timeObj.one_day,
-                  {
-                    date: oneClass.date.start_date,
-                    weekday: weekdays,
-                    time: [startHr, startMin, endHr, endMin]
-                  }
-                ];
-              }
-            }
-          }
-          if (flag) {
-            // if no closed class
-            courseCodeToTime.set(section.class_number, timeObj);
-          }
-        }
-      }
-      //result = (list of all courses (list of all combination of compeleteCourseSelectionList))
-      let result = filtered_courses.map(x =>
-        x.reduce((a, b) =>
-          a.reduce((r, v) => r.concat(b.map(w => [].concat(v, w))), [])
-        )
-      );
-      for (var x in result) {
-        for (var y in x) {
-        }
-      }
-      let permutation = result.reduce((a, b) =>
-        a.reduce((r, v) => r.concat(b.map(w => [].concat([v], [w]))), [])
-      );
-      let all_possible_schedules;
-      for (var schedule in permutation) {
-        let isValid1 = true;
-        let timeArray = [
-          new Array(143).fill(0),
-          new Array(143).fill(0),
-          new Array(143).fill(0),
-          new Array(143).fill(0),
-          new Array(143).fill(0)
-        ];
-        for (var course in schedule) {
-          for (var section in course) {
-            const sectionTimeObj = courseCodeToTime.get(section);
-            if (sectionTimeObj === undefined) {
-              // cannot find section number in map
-              response = {
-                statusCode: 500,
-                headers: {
-                  "Access-Control-Allow-Origin": "*"
-                },
-                body: JSON.stringify("Course code is not found!")
-              };
-              return response;
-            }
-            const every_week = sectionTimeObj.every_week;
-            for (let i = 0; i < 5; i++) {
-              if (every_week[i] === null) continue;
-              isValid1 = validate(timeArray[i], every_week[i]);
-              if (!isValid1) break;
-            }
-            if (!isValid1) break;
-          }
-          if (!isValid1) break;
-        }
-        let isValid2 = true; // conflict one-day with one-dauy
-        let isValid3 = true; // conflict one-day with every-week
-        if (isValid1) {
-          let one_day_map = {};
-          for (var course in schedule) {
-            for (var section in course) {
-              const one_day = section.one_day;
-              if (one_day.length > 0) {
-                for (var one_day_obj in one_day) {
-                  if (one_day_map.has(one_day_obj.date)) {
-                    isValid2 = validate(
-                      one_day_map.get(one_day_obj.date),
-                      one_day_obj.time
-                    );
-                    if (!isValid2) break;
-                  } else {
-                    one_day_map.set(one_day_obj.date, new Array(143).fill(0));
-                  }
-                  switch (one_day_obj.weekday) {
-                    case "M":
-                      isValid3 = validate(timeArray[0], one_day_obj.time);
-                      break;
-                    case "T":
-                      isValid3 = validate(timeArray[1], one_day_obj.time);
-                      break;
-                    case "W":
-                      isValid3 = validate(timeArray[2], one_day_obj.time);
-                      break;
-                    case "Th":
-                      isValid3 = validate(timeArray[3], one_day_obj.time);
-                      break;
-                    case "F":
-                      isValid3 = validate(timeArray[4], one_day_obj.time);
-                      break;
-                    default:
-                      break;
-                  }
-                  if (!isValid3) break;
-                }
-              }
-              if (!isValid2 || !isValid3) break;
-            }
-            if (!isValid2 || !isValid3) break;
-          }
-        }
-        if (isValid1 && isValid2 && isValid3) {
-          validSchedules.concat([schedule]);
-        }
-      }
-    }
-  } else {
-    response = {
+  if (!event || !event.body) {
+    return {
       statusCode: 400,
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: JSON.stringify("No Request Body")
+      body: "Missing request body!"
     };
-    console.log(response);
   }
-};
+  let body = JSON.parse(event.body);
+  if (!body.courses_info) {
+    return {
+      statusCode: 400,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: "Missing courses info!"
+    };
+  }
+  if (!body.filtered_courses) {
+    return {
+      statusCode: 400,
+      headers: {
+        "Access-Control-Allow-Origin": "*"
+      },
+      body: "Missing filtered course!"
+    };
+  }
 
-handler(event);
+  let courses_info = body.courses_info;
+  let filtered_courses = body.filtered_courses;
+  let courseCodeToTime = {}; // time: [[startHH,startMM,endHH,endMM], [...], ...]
+  for (var i = 0; i < courses_info.length; i++) {
+    var course = courses_info[i];
+    for (var j = 0; j < course.length; j++) {
+      var section = course[j];
+      if (section.campus === "ONLN ONLINE") continue;
+      let flag = true; // not closed
+      let timeObj = {
+        every_week: [[], [], [], [], []],
+        one_day: []
+      };
+      for (var k = 0; k < section.classes.length; k++) {
+        var oneClass = section.classes[k];
+        if (oneClass.date.is_closed) {
+          flag = false; // one class is closed
+          break;
+        } else {
+          let [startHr, startMin] = oneClass.date.start_time.split(":");
+          let [endHr, endMin] = oneClass.date.end_time.split(":");
+          startHr = parseInt(startHr);
+          startMin = parseInt(startMin);
+          endHr = parseInt(endHr);
+          endMin = parseInt(endMin);
+          let weekdays = oneClass.date.weekdays;
+          if (oneClass.date.start_date === null) {
+            // every week case
+            if (weekdays.includes("M")) {
+              timeObj.every_week[0].push([startHr, startMin, endHr, endMin]);
+            }
+            if (weekdays.includes("Th")) {
+              timeObj.every_week[3].push([startHr, startMin, endHr, endMin]);
+              weekdays = weekdays.replace("Th", "");
+            }
+            if (weekdays.includes("T")) {
+              timeObj.every_week[1].push([startHr, startMin, endHr, endMin]);
+            }
+            if (weekdays.includes("W")) {
+              timeObj.every_week[2].push([startHr, startMin, endHr, endMin]);
+            }
+            if (weekdays.includes("F")) {
+              timeObj.every_week[4].push([startHr, startMin, endHr, endMin]);
+            }
+          } else {
+            // one day case
+            timeObj.one_day = [
+              ...timeObj.one_day,
+              {
+                date: oneClass.date.start_date,
+                weekdays: weekdays,
+                time: [startHr, startMin, endHr, endMin]
+              }
+            ];
+          }
+        }
+      }
+      if (flag) {
+        // if no closed class
+        courseCodeToTime[section.class_number] = timeObj;
+      }
+    }
+  }
+
+  let allCombo = perm(
+    filtered_courses.map(course =>
+      course.map(oneCourseCombo => perm(oneCourseCombo)).flat()
+    )
+  ).map(x => x.flat());
+
+  for (let i = 0; i < allCombo.length; i++) {
+    let combo = allCombo[i];
+    let hasConflict = false;
+    let scheduleObj = {
+      every_week: [
+        new Array(144).fill(0),
+        new Array(144).fill(0),
+        new Array(144).fill(0),
+        new Array(144).fill(0),
+        new Array(144).fill(0)
+      ]
+    };
+    for (let sectionCode of combo) {
+      let sectionTimeObj = courseCodeToTime[sectionCode];
+      if (sectionTimeObj === undefined) {
+        return {
+          statusCode: 400,
+          headers: {
+            "Access-Control-Allow-Origin": "*"
+          },
+          body: "Course code not found!"
+        };
+      }
+      let every_week = sectionTimeObj.every_week;
+      let one_day = sectionTimeObj.one_day;
+      hasConflict = checkEveryWeekConflict(every_week, scheduleObj, true);
+      hasConflict = hasConflict || checkOneDayConflict(one_day, scheduleObj);
+      if (hasConflict) {
+        break;
+      } else {
+        continue;
+      }
+    }
+    if (hasConflict) {
+      continue;
+    } else {
+      validSchedules.push(combo);
+    }
+  }
+  return {
+    statusCode: 200,
+    headers: {
+      "Access-Control-Allow-Origin": "*"
+    },
+    body: JSON.stringify(validSchedules)
+  };
+};
