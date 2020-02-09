@@ -1,6 +1,6 @@
 "use strict";
 
-exports.handler = async event => {
+exports.handler = async (event) => {
   const timeToIdx = (h, m) => h * 6 + m / 10;
   const prepend = (i, lol) => lol.map(lst => [i].concat(lst));
 
@@ -84,7 +84,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Missing request body!"
+      body: JSON.stringify("Missing request body!")
     };
   }
   let body = JSON.parse(event.body);
@@ -94,7 +94,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Missing courses info!"
+      body: JSON.stringify("Missing courses info!")
     };
   }
   if (!body.filtered_courses) {
@@ -103,7 +103,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Missing filtered course!"
+      body: JSON.stringify("Missing filtered course!")
     };
   }
 
@@ -197,7 +197,7 @@ exports.handler = async event => {
           headers: {
             "Access-Control-Allow-Origin": "*"
           },
-          body: "Course code not found!"
+          body: JSON.stringify("Course code not found!")
         };
       }
       let every_week = sectionTimeObj.every_week;

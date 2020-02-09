@@ -11,7 +11,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Missing request body!"
+      body: JSON.stringify("Missing request body!")
     };
   }
   const body = JSON.parse(event.body);
@@ -21,7 +21,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Missing quest id!"
+      body: JSON.stringify("Missing quest id!")
     };
   }
   if (
@@ -34,7 +34,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Missing classes!"
+      body: JSON.stringify("Missing classes!")
     };
   }
   const questId = body.id.trim();
@@ -54,7 +54,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Success!"
+      body: JSON.stringify("Success!")
     };
   } catch (err) {
     return {
@@ -62,7 +62,7 @@ exports.handler = async event => {
       headers: {
         "Access-Control-Allow-Origin": "*"
       },
-      body: "Unable to add item. Error:\n" + JSON.stringify(err, null, 2)
+      body: JSON.stringify(`Unable to add item. Error: ${err}`)
     };
   }
 };
