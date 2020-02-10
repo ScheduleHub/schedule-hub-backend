@@ -4,7 +4,8 @@
   "description": "local backend dev and testing for schedule planner",
   "dependencies": {
     "aws-sdk": "^2.614.0",
-    "nodemon": "^2.0.2"
+    "nodemon": "^2.0.2",
+    "uuid": "^3.4.0"
   },
   "devDependencies": {
     "@babel/core": "^7.8.4",
@@ -13,7 +14,8 @@
   },
   "scripts": {
     "handleScheduleInput": "nodemon --exec babel-node src/handleScheduleInput/test/index",
-    "handleScheduleRequest": "nodemon --exec babel-node src/handleScheduleRequest/test/index"
+    "handleScheduleRequest": "nodemon --exec babel-node src/handleScheduleRequest/test/index",
+    "handleUserRating": "nodemon --exec babel-node src/handleUserRating/test/index"
   },
   "repository": {
     "type": "git",

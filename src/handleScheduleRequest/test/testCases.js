@@ -8083,5 +8083,5 @@ export default {
   basic,
   medium,
   big,
-  huge
+  //huge
 };
