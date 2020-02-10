@@ -28,28 +28,28 @@ const getValidSchedules = (body) => {
     for (let oneDayObj of one_day) {
       let { time, weekdays, date } = oneDayObj;
       let [startHr, startMin, endHr, endMin] = time;
-      if (weekdays.includes("M")) {
+      if (weekdays.includes('M')) {
         if (
           checkEveryWeekConflict([[time], [], [], [], []], scheduleObj, false)
         )
           return true;
-      } else if (weekdays.includes("Th")) {
+      } else if (weekdays.includes('Th')) {
         if (
           checkEveryWeekConflict([[], [], [], [time], []], scheduleObj, false)
         )
           return true;
-        weekdays = weekdays.replace("Th", "");
-      } else if (weekdays.includes("T")) {
+        weekdays = weekdays.replace('Th', '');
+      } else if (weekdays.includes('T')) {
         if (
           checkEveryWeekConflict([[], [time], [], [], []], scheduleObj, false)
         )
           return true;
-      } else if (weekdays.includes("W")) {
+      } else if (weekdays.includes('W')) {
         if (
           checkEveryWeekConflict([[], [], [time], [], []], scheduleObj, false)
         )
           return true;
-      } else if (weekdays.includes("F")) {
+      } else if (weekdays.includes('F')) {
         if (
           checkEveryWeekConflict([[], [], [], [], [time]], scheduleObj, false)
         )
@@ -85,7 +85,7 @@ const getValidSchedules = (body) => {
     var course = courses_info[i];
     for (var j = 0; j < course.length; j++) {
       var section = course[j];
-      if (section.campus === "ONLN ONLINE") continue;
+      if (section.campus === 'ONLN ONLINE') continue;
       let flag = true; // not closed
       let timeObj = {
         every_week: [[], [], [], [], []],
@@ -97,8 +97,8 @@ const getValidSchedules = (body) => {
           flag = false; // one class is closed
           break;
         } else {
-          let [startHr, startMin] = oneClass.date.start_time.split(":");
-          let [endHr, endMin] = oneClass.date.end_time.split(":");
+          let [startHr, startMin] = oneClass.date.start_time.split(':');
+          let [endHr, endMin] = oneClass.date.end_time.split(':');
           startHr = parseInt(startHr, 10);
           startMin = parseInt(startMin, 10);
           endHr = parseInt(endHr, 10);
@@ -106,20 +106,20 @@ const getValidSchedules = (body) => {
           let weekdays = oneClass.date.weekdays;
           if (oneClass.date.start_date === null) {
             // every week case
-            if (weekdays.includes("M")) {
+            if (weekdays.includes('M')) {
               timeObj.every_week[0].push([startHr, startMin, endHr, endMin]);
             }
-            if (weekdays.includes("Th")) {
+            if (weekdays.includes('Th')) {
               timeObj.every_week[3].push([startHr, startMin, endHr, endMin]);
-              weekdays = weekdays.replace("Th", "");
+              weekdays = weekdays.replace('Th', '');
             }
-            if (weekdays.includes("T")) {
+            if (weekdays.includes('T')) {
               timeObj.every_week[1].push([startHr, startMin, endHr, endMin]);
             }
-            if (weekdays.includes("W")) {
+            if (weekdays.includes('W')) {
               timeObj.every_week[2].push([startHr, startMin, endHr, endMin]);
             }
-            if (weekdays.includes("F")) {
+            if (weekdays.includes('F')) {
               timeObj.every_week[4].push([startHr, startMin, endHr, endMin]);
             }
           } else {
