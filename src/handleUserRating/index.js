@@ -62,7 +62,7 @@ exports.handler = async(event) => {
 		'fri_num_classes'
 	];
 
-  entriesObj.id = uuidv4();
+	entriesObj.id = uuidv4();
 	featureHeaders.forEach((x, i) => entriesObj[x] = body.features[i]);
 	entriesObj.rating = body.rating;
 
@@ -80,8 +80,7 @@ exports.handler = async(event) => {
 			},
 			body: JSON.stringify('Success!')
 		};
-	}
-	catch (err) {
+	} catch (err) {
 		return {
 			statusCode: 500,
 			headers: {
