@@ -1,4 +1,4 @@
-"use strict";
+'use strict';
 
 exports.handler = async (event) => {
   const timeToIdx = (h, m) => h * 6 + m / 10;
@@ -29,28 +29,28 @@ exports.handler = async (event) => {
     for (let oneDayObj of one_day) {
       let { time, weekdays, date } = oneDayObj;
       let [startHr, startMin, endHr, endMin] = time;
-      if (weekdays.includes("M")) {
+      if (weekdays.includes('M')) {
         if (
           checkEveryWeekConflict([[time], [], [], [], []], scheduleObj, false)
         )
           return true;
-      } else if (weekdays.includes("Th")) {
+      } else if (weekdays.includes('Th')) {
         if (
           checkEveryWeekConflict([[], [], [], [time], []], scheduleObj, false)
         )
           return true;
-        weekdays = weekdays.replace("Th", "");
-      } else if (weekdays.includes("T")) {
+        weekdays = weekdays.replace('Th', '');
+      } else if (weekdays.includes('T')) {
         if (
           checkEveryWeekConflict([[], [time], [], [], []], scheduleObj, false)
         )
           return true;
-      } else if (weekdays.includes("W")) {
+      } else if (weekdays.includes('W')) {
         if (
           checkEveryWeekConflict([[], [], [time], [], []], scheduleObj, false)
         )
           return true;
-      } else if (weekdays.includes("F")) {
+      } else if (weekdays.includes('F')) {
         if (
           checkEveryWeekConflict([[], [], [], [], [time]], scheduleObj, false)
         )
@@ -82,31 +82,31 @@ exports.handler = async (event) => {
     return {
       statusCode: 400,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Missing request body!")
+      body: JSON.stringify('Missing request body!')
     };
   }
   let body = JSON.parse(event.body);
   if (!body.courses_info) {
     return {
-      statusCode: 400,
+      statusCode: 401,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Missing courses info!")
+      body: JSON.stringify('Missing courses info!')
     };
   }
   if (!body.filtered_courses) {
     return {
-      statusCode: 400,
+      statusCode: 402,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Missing filtered course!")
+      body: JSON.stringify('Missing filtered course!')
     };
   }
-
+  let deleteSections = [];
   let courses_info = body.courses_info;
   let filtered_courses = body.filtered_courses;
   let courseCodeToTime = {}; // time: [[startHH,startMM,endHH,endMM], [...], ...]
@@ -114,7 +114,7 @@ exports.handler = async (event) => {
     var course = courses_info[i];
     for (var j = 0; j < course.length; j++) {
       var section = course[j];
-      if (section.campus === "ONLN ONLINE") continue;
+      if (section.campus === 'ONLN ONLINE') continue;
       let flag = true; // not closed
       let timeObj = {
         every_week: [[], [], [], [], []],
@@ -122,33 +122,34 @@ exports.handler = async (event) => {
       };
       for (var k = 0; k < section.classes.length; k++) {
         var oneClass = section.classes[k];
-        if (oneClass.date.is_closed) {
+        if (oneClass.date.is_closed || oneClass.date.is_cancelled || oneClass.date.is_tba) {
           flag = false; // one class is closed
+          deleteSections.push(section.class_number);
           break;
         } else {
-          let [startHr, startMin] = oneClass.date.start_time.split(":");
-          let [endHr, endMin] = oneClass.date.end_time.split(":");
-          startHr = parseInt(startHr);
-          startMin = parseInt(startMin);
-          endHr = parseInt(endHr);
-          endMin = parseInt(endMin);
+          let [startHr, startMin] = oneClass.date.start_time.split(':');
+          let [endHr, endMin] = oneClass.date.end_time.split(':');
+          startHr = parseInt(startHr, 10);
+          startMin = parseInt(startMin, 10);
+          endHr = parseInt(endHr, 10);
+          endMin = parseInt(endMin, 10);
           let weekdays = oneClass.date.weekdays;
           if (oneClass.date.start_date === null) {
             // every week case
-            if (weekdays.includes("M")) {
+            if (weekdays.includes('M')) {
               timeObj.every_week[0].push([startHr, startMin, endHr, endMin]);
             }
-            if (weekdays.includes("Th")) {
+            if (weekdays.includes('Th')) {
               timeObj.every_week[3].push([startHr, startMin, endHr, endMin]);
-              weekdays = weekdays.replace("Th", "");
+              weekdays = weekdays.replace('Th', '');
             }
-            if (weekdays.includes("T")) {
+            if (weekdays.includes('T')) {
               timeObj.every_week[1].push([startHr, startMin, endHr, endMin]);
             }
-            if (weekdays.includes("W")) {
+            if (weekdays.includes('W')) {
               timeObj.every_week[2].push([startHr, startMin, endHr, endMin]);
             }
-            if (weekdays.includes("F")) {
+            if (weekdays.includes('F')) {
               timeObj.every_week[4].push([startHr, startMin, endHr, endMin]);
             }
           } else {
@@ -179,6 +180,7 @@ exports.handler = async (event) => {
 
   for (let i = 0; i < allCombo.length; i++) {
     let combo = allCombo[i];
+    if (combo.filter(item => deleteSections.includes(item)).length > 0) continue;
     let hasConflict = false;
     let scheduleObj = {
       every_week: [
@@ -193,11 +195,11 @@ exports.handler = async (event) => {
       let sectionTimeObj = courseCodeToTime[sectionCode];
       if (sectionTimeObj === undefined) {
         return {
-          statusCode: 400,
+          statusCode: 403,
           headers: {
-            "Access-Control-Allow-Origin": "*"
+            'Access-Control-Allow-Origin': '*'
           },
-          body: JSON.stringify("Course code not found!")
+          body: JSON.stringify('Course code not found!')
         };
       }
       let every_week = sectionTimeObj.every_week;
@@ -219,7 +221,7 @@ exports.handler = async (event) => {
   return {
     statusCode: 200,
     headers: {
-      "Access-Control-Allow-Origin": "*"
+      'Access-Control-Allow-Origin': '*'
     },
     body: JSON.stringify(validSchedules)
   };

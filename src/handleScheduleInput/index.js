@@ -1,27 +1,27 @@
-"use strict";
+'use strict';
 
-const AWS = require("aws-sdk");
-AWS.config.update({ region: "us-east-2" });
+const AWS = require('aws-sdk');
+AWS.config.update({ region: 'us-east-2' });
 
-exports.handler = async event => {
-  const docClient = new AWS.DynamoDB.DocumentClient({ region: "us-east-2" });
+exports.handler = async (event) => {
+  const docClient = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
   if (!event || !event.body) {
     return {
       statusCode: 400,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Missing request body!")
+      body: JSON.stringify('Missing request body!')
     };
   }
   const body = JSON.parse(event.body);
   if (!body.id) {
     return {
-      statusCode: 401,
+      statusCode: 400,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Missing quest id!")
+      body: JSON.stringify('Missing quest id!')
     };
   }
   if (
@@ -30,17 +30,17 @@ exports.handler = async event => {
     body.sections.length === 0
   ) {
     return {
-      statusCode: 402,
+      statusCode: 400,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Missing classes!")
+      body: JSON.stringify('Missing classes!')
     };
   }
   const questId = body.id.trim();
   const sections = body.sections;
   const params = {
-    TableName: "Schedule",
+    TableName: 'Schedule',
     Item: {
       QuestId: questId,
       Sections: sections
@@ -52,15 +52,15 @@ exports.handler = async event => {
     return {
       statusCode: 200,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
-      body: JSON.stringify("Success!")
+      body: JSON.stringify('Success!')
     };
   } catch (err) {
     return {
       statusCode: 500,
       headers: {
-        "Access-Control-Allow-Origin": "*"
+        'Access-Control-Allow-Origin': '*'
       },
       body: JSON.stringify(`Unable to add item. Error: ${err}`)
     };
