@@ -1,7 +1,7 @@
 const empty = {};
 
 const missingBody = {
-  params: {}
+  params: {},
 };
 
 const missingCoursesInfo = {
@@ -10,7 +10,8 @@ const missingCoursesInfo = {
     filtered_courses: [
       [[[8660], [8661], [6098]]],
       [[[6701], [6702, 6703, 6704, 6705, 6706, 6853], [8504]]]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
 
@@ -657,9 +658,661 @@ const missingFilteredCourses = {
           last_updated: "2020-02-03T10:04:22-05:00"
         }
       ]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
+
+const missingPreferences = {
+  params: {},
+  body: JSON.stringify({
+    courses_info: [
+      [
+        {
+          subject: "CS",
+          catalog_number: "146",
+          units: 0.5,
+          title:
+            "Elementary Algorithm Design and Data Abstraction (Advanced Level)",
+          note: null,
+          class_number: 6094,
+          section: "LEC 001",
+          campus: "UW U",
+          associated_class: 1,
+          related_component_1: "101",
+          related_component_2: "201",
+          enrollment_capacity: 75,
+          enrollment_total: 68,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "10:00",
+                end_time: "11:20",
+                weekdays: "TTh",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "MC",
+                room: "4021"
+              },
+              instructors: ["Lushman,Brad"]
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:01:36-05:00"
+        },
+        {
+          subject: "CS",
+          catalog_number: "146",
+          units: 0.5,
+          title:
+            "Elementary Algorithm Design and Data Abstraction (Advanced Level)",
+          note: null,
+          class_number: 8660,
+          section: "LEC 002",
+          campus: "UW U",
+          associated_class: 2,
+          related_component_1: "102",
+          related_component_2: "201",
+          enrollment_capacity: 65,
+          enrollment_total: 60,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "11:30",
+                end_time: "12:50",
+                weekdays: "TTh",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "MC",
+                room: "4058"
+              },
+              instructors: ["Hackman,Rob"]
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:01:36-05:00"
+        },
+        {
+          subject: "CS",
+          catalog_number: "146",
+          units: 0.5,
+          title:
+            "Elementary Algorithm Design and Data Abstraction (Advanced Level)",
+          note: null,
+          class_number: 6126,
+          section: "TUT 101",
+          campus: "UW U",
+          associated_class: 1,
+          related_component_1: null,
+          related_component_2: null,
+          enrollment_capacity: 75,
+          enrollment_total: 68,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "09:30",
+                end_time: "10:20",
+                weekdays: "W",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "PHY",
+                room: "313"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:01:36-05:00"
+        },
+        {
+          subject: "CS",
+          catalog_number: "146",
+          units: 0.5,
+          title:
+            "Elementary Algorithm Design and Data Abstraction (Advanced Level)",
+          note: null,
+          class_number: 8661,
+          section: "TUT 102",
+          campus: "UW U",
+          associated_class: 2,
+          related_component_1: null,
+          related_component_2: null,
+          enrollment_capacity: 65,
+          enrollment_total: 60,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "15:30",
+                end_time: "16:20",
+                weekdays: "W",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "MC",
+                room: "2035"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:01:36-05:00"
+        },
+        {
+          subject: "CS",
+          catalog_number: "146",
+          units: 0.5,
+          title:
+            "Elementary Algorithm Design and Data Abstraction (Advanced Level)",
+          note: null,
+          class_number: 6098,
+          section: "TST 201",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 140,
+          enrollment_total: 128,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "19:00",
+                end_time: "20:50",
+                weekdays: "M",
+                start_date: "03/02",
+                end_date: "03/02",
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: null,
+                room: null
+              },
+              instructors: ["Anderson,Karen"]
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:01:36-05:00"
+        }
+      ],
+      [
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6700,
+          section: "LEC 001",
+          campus: "UW U",
+          associated_class: 1,
+          related_component_1: null,
+          related_component_2: "201",
+          enrollment_capacity: 250,
+          enrollment_total: 247,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "11:30",
+                end_time: "12:20",
+                weekdays: "MWF",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "DC",
+                room: "1350"
+              },
+              instructors: ["Idziak,Stefan"]
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6701,
+          section: "LEC 002",
+          campus: "UW U",
+          associated_class: 2,
+          related_component_1: null,
+          related_component_2: "201",
+          enrollment_capacity: 300,
+          enrollment_total: 182,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "08:30",
+                end_time: "09:20",
+                weekdays: "MWF",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "STC",
+                room: "1012"
+              },
+              instructors: ["Idziak,Stefan"]
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 7285,
+          section: "LEC 003",
+          campus: "UW U",
+          associated_class: 3,
+          related_component_1: null,
+          related_component_2: "201",
+          enrollment_capacity: 250,
+          enrollment_total: 156,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "16:00",
+                end_time: "17:20",
+                weekdays: "TTh",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "DC",
+                room: "1351"
+              },
+              instructors: ["Cummings,Karen"]
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6702,
+          section: "TUT 101",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 134,
+          enrollment_total: 108,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "13:30",
+                end_time: "14:20",
+                weekdays: "Th",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "MC",
+                room: "4058"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6703,
+          section: "TUT 102",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 134,
+          enrollment_total: 82,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "13:30",
+                end_time: "14:20",
+                weekdays: "Th",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "PHY",
+                room: "150"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6704,
+          section: "TUT 103",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 133,
+          enrollment_total: 123,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "13:30",
+                end_time: "14:20",
+                weekdays: "W",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "PHY",
+                room: "150"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6705,
+          section: "TUT 104",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 133,
+          enrollment_total: 94,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "15:30",
+                end_time: "16:20",
+                weekdays: "W",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "PHY",
+                room: "150"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6706,
+          section: "TUT 105",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 133,
+          enrollment_total: 106,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "14:30",
+                end_time: "15:20",
+                weekdays: "W",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "PHY",
+                room: "150"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 6853,
+          section: "TUT 106",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 133,
+          enrollment_total: 71,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "13:30",
+                end_time: "14:20",
+                weekdays: "W",
+                start_date: null,
+                end_date: null,
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: "MC",
+                room: "4058"
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        },
+        {
+          subject: "PHYS",
+          catalog_number: "112",
+          units: 0.5,
+          title: "Physics 2",
+          note: "Choose TUT section for Related 1.",
+          class_number: 8504,
+          section: "TST 201",
+          campus: "UW U",
+          associated_class: 99,
+          related_component_1: "99",
+          related_component_2: null,
+          enrollment_capacity: 800,
+          enrollment_total: 585,
+          waiting_capacity: 0,
+          waiting_total: 0,
+          topic: null,
+          reserves: [],
+          classes: [
+            {
+              date: {
+                start_time: "17:30",
+                end_time: "18:50",
+                weekdays: "W",
+                start_date: "02/26",
+                end_date: "02/26",
+                is_tba: false,
+                is_cancelled: false,
+                is_closed: false
+              },
+              location: {
+                building: null,
+                room: null
+              },
+              instructors: []
+            }
+          ],
+          held_with: [],
+          term: 1201,
+          academic_level: "undergraduate",
+          last_updated: "2020-02-03T10:04:22-05:00"
+        }
+      ]
+    ],
+    filtered_courses: [
+      [[[8660], [8661], [6098]]],
+      [[[6701], [6702, 6703, 6704, 6705, 6706, 6853], [8504]]]
+    ]
+  })
+}
 
 const normal = {
   params: {},
@@ -1308,7 +1961,8 @@ const normal = {
     filtered_courses: [
       [[[8660], [8661], [6098]]],
       [[[6701], [6702, 6703, 6704, 6705, 6706, 6853], [8504]]]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
 
@@ -2297,7 +2951,8 @@ const basic = {
         [[6998], [7000, 7001, 7002, 7003, 7004, 7188], [7116]],
         [[6999], [7000, 7001, 7002, 7003, 7004, 7188], [7116]]
       ]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
 
@@ -3564,7 +4219,8 @@ const medium = {
         [[6149], [5760, 6277, 6344], [6029]],
         [[6343], [5760, 6277, 6344], [6029]]
       ]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
 
@@ -5562,7 +6218,8 @@ const big = {
         [[6094], [6126], [6098]],
         [[8660], [8661], [6098]]
       ]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
 
@@ -8070,7 +8727,8 @@ const huge = {
         [[5969], [6504], [6035]],
         [[6116], [6504], [6035]]
       ]
-    ]
+    ],
+    preferences: [1,2,3]
   })
 };
 
@@ -8079,6 +8737,7 @@ export default {
   missingBody,
   missingCoursesInfo,
   missingFilteredCourses,
+  missingPreferences,
   normal,
   basic,
   medium,

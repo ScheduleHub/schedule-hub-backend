@@ -106,6 +106,15 @@ exports.handler = async (event) => {
       body: JSON.stringify('Missing filtered course!')
     };
   }
+  if (!body.preferences || !Array.isArray(body.preferences) || body.preferences.length !== 3) {
+    return {
+      statusCode: 403,
+      headers: {
+        'Access-Control-Allow-Origin': '*'
+      },
+      body: JSON.stringify('Missing/Incorrect preferences!')
+    };
+  }
   let deleteSections = [];
   let courses_info = body.courses_info;
   let filtered_courses = body.filtered_courses;
@@ -223,6 +232,6 @@ exports.handler = async (event) => {
     headers: {
       'Access-Control-Allow-Origin': '*'
     },
-    body: JSON.stringify(validSchedules)
+    body: JSON.stringify({validSchedules, preferences: body.preferences})
   };
 };
