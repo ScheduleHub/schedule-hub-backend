@@ -29,7 +29,7 @@ exports.handler = async(event) => {
         Key: {
           'id': id
         },
-        ProjectionExpression: 'id, schedule'
+        ProjectionExpression: 'id, schedule, early_class, even_dist, together_class'
       };
       try {
         const newResult = await docClient.get(localParams).promise();

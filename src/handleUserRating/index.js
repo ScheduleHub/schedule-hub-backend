@@ -5,6 +5,10 @@ AWS.config.update({ region: 'us-east-2' });
 
 exports.handler = async(event) => {
 
+	const calcRating = (obj, early_class, even_dist, together_class) => {
+		return 1 - (Math.abs(obj.early_class - early_class) + Math.abs(obj.even_dist - even_dist) + Math.abs(obj.together_class - together_class)) / 3
+	}
+
 	const docClient = new AWS.DynamoDB.DocumentClient({ region: 'us-east-2' });
 
 	if (!event || !event.body) {
@@ -46,13 +50,22 @@ exports.handler = async(event) => {
 				body: JSON.stringify('Missing/Incorrect schedule id!')
 			};
 		}
-		if (!obj.rating || (typeof obj.rating) !== 'number' || obj.rating < 0 || obj.rating > 100) {
+		if (!obj.early_class || !obj.even_dist || !obj.together_class) {
 			return {
 				statusCode: 400,
 				headers: {
 					'Access-Control-Allow-Origin': '*'
 				},
-				body: JSON.stringify('Missing/Incorrect rating!')
+				body: JSON.stringify('Missing rating data!')
+			};
+		}
+		if (typeof obj.early_class !== 'number' || typeof obj.even_dist !== 'number' || typeof obj.together_class !== 'number') {
+			return {
+				statusCode: 400,
+				headers: {
+					'Access-Control-Allow-Origin': '*'
+				},
+				body: JSON.stringify('Incorrect rating data!')
 			};
 		}
 	}
@@ -61,18 +74,25 @@ exports.handler = async(event) => {
 	let failed = 0;
 	let err_message = '';
 	for (const obj of body) {
-		const params = {
+		const getParams = {
 			TableName: 'schedule_data',
 			Key: { 'id': obj.id },
-			UpdateExpression: 'SET rating = list_append(rating, :val)',
-			ExpressionAttributeValues: { ':val': [obj.rating] }
-		};
-		try {
-			await docClient.update(params).promise();
-			added += 1;
+			ProjectionExpression: 'early_class, even_dist, together_class'
 		}
-		catch (err) {
-			err_message += (err + '\n');
+		try {
+			const result = await docClient.get(getParams).promise();
+			const { early_class, even_dist, together_class } = result.Item;
+			const rating = calcRating(obj, early_class, even_dist, together_class);
+			const updateParams = {
+				TableName: 'schedule_data',
+				Key: { 'id': obj.id },
+				UpdateExpression: 'SET rating = list_append(rating, :val)',
+				ExpressionAttributeValues: { ':val': [rating] }
+			}
+			await docClient.update(updateParams).promise();
+			added += 1;
+		} catch (err) {
+			err_message += err + '\n';
 			failed += 1;
 		}
 	}
@@ -93,14 +113,14 @@ exports.handler = async(event) => {
 		let result = await docClient.scan(params1).promise();
 		result = result.Items;
 		if (result.includes(questId)) {
-			const updateParams = {
+			const updateIdParams = {
 				TableName: 'quest_id',
 				Key: { 'id': questId },
 				UpdateExpression: 'SET count = count + :val',
 				ExpressionAttributeValues: { ':val': 1 }
 			};
 			try {
-				await docClient.update(updateParams).promise()
+				await docClient.update(updateIdParams).promise()
 			}
 			catch (err) {
 				return {
@@ -108,7 +128,7 @@ exports.handler = async(event) => {
 					headers: {
 						'Access-Control-Allow-Origin': '*'
 					},
-					body: JSON.stringify(err_message)
+					body: JSON.stringify(`Unable to add quest id ${err}`)
 				};
 			}
 		}
@@ -133,7 +153,6 @@ exports.handler = async(event) => {
 				};
 			}
 		}
-
 		return {
 			statusCode: 200,
 			headers: {
